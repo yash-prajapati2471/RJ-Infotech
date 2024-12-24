@@ -35,7 +35,7 @@
 				<div class="col-lg-6">
 					<div class="login_form_inner">
 						<h3>Register in to enter</h3>
-						<form action="{% url 'registration' %}" class="row login_form" method="POST">
+						<form action="{% url 'registration' %}" method="POST" class="row login_form">
 							{% csrf_token %}
 							<div class="col-md-12 form-group">
 								{{form.firstname}}
@@ -45,6 +45,9 @@
 							</div>
 							<div class="col-md-12 form-group">
 								{{form.email}}
+							</div>
+							<div class="col-md-12 form-group">
+								{{form.phone}}
 							</div>
 							<div class="col-md-12 form-group">
 								{{form.password}}

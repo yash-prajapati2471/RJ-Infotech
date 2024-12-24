@@ -23,6 +23,7 @@ class RegisterForm(forms.ModelForm):
         self.fields['firstname'].widget.attrs['placeholder'] = "Firstname"
         self.fields['lastname'].widget.attrs['placeholder'] = "Lastname"
         self.fields['email'].widget.attrs['placeholder'] = "Email"
+        self.fields['phone'].widget.attrs['placeholder'] = "phone"
 
         for i in self.fields:
             self.fields[i].widget.attrs['class'] = "form-control"
