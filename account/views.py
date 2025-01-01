@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.contrib import messages
 # Create your views here.
 
 def registration(request):
@@ -27,22 +28,36 @@ def registration(request):
             username = email.split("@")[0]
 
             user = register.objects.create_user(firstname=firstname,lastname=lastname,email=email,phone=phone,username=username,password=password)
+            messages.success(request,"You have Register Success,please cheak out your email")
             user.save()
 
-            email_subject = "Please Active your Email"
-            current_side = get_current_site(request)
-
-            message = render_to_string('account/verification.html',{
+            context = {
                 'user':user,
                 'domain':current_side,
                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
                 'token':default_token_generator.make_token(user),
-            })
+            }
 
+            try:
+                email_subject = "Please Active your Email"
+                current_side = get_current_site(request)
 
-            send_email = EmailMessage(email_subject,message,to=[email])
-            send_email.send()
-            return redirect('index')
+                message = render_to_string('account/verification.html',context)
+                send_email = EmailMessage(email_subject,message,to=[email])
+                send_email.send()
+
+            except:
+                pass
+
+            return redirect(f'/account/login/?command=verification$email='+email)
+
+        else:
+            messages.error(request,"User is already register")
+            return redirect('/account/registration/?&email='+email+'&uid='+context.uid)
+            return register('registration')
+
+            
+            
         
     else:
         form = RegisterForm()
@@ -60,16 +75,21 @@ def login(request):
         password = request.POST['password']
 
         user = authenticate(request,username=username,password=password)
+
         if user is not None:
+            messages.success(request,"You have login success")
             user_login(request,user)
             return redirect('index')
+        else:
+            messages.success(request,"Wrong Email And Password.")
+            return redirect('login')
 
     return render(request,'account/login.html')
 
 def verification(request,uid64,token):
     try:
         userid = urlsafe_base64_decode(uid64).decode()
-        user = register._default_manager(id=userid)
+        user = register._default_manager.get(id=userid)
         tokens = default_token_generator.check_token(user,token)
     except:
         user = None
