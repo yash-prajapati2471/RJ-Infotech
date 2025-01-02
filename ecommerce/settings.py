@@ -88,7 +88,7 @@ AUTH_USER_MODEL = 'account.registration'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rjinfotech',
+        'NAME': 'ecom',
         'USER': 'root',
         'PASSWORD': 'yash1234',
         'HOST': 'localhost',

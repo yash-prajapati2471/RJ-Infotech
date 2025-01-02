@@ -8,6 +8,7 @@ class product(models.Model):
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     product_detail = models.CharField(max_length=200)
     product_price = models.IntegerField()
+    product_hideprice = models.IntegerField()
     product_stock = models.IntegerField()
     is_active = models.BooleanField(default=True)
     product_image = models.ImageField(upload_to='product_image/')
