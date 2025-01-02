@@ -31,17 +31,18 @@ def registration(request):
             messages.success(request,"You have Register Success,please cheak out your email")
             user.save()
 
-            context = {
-                'user':user,
-                'domain':current_side,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':default_token_generator.make_token(user),
-            }
+            
 
             try:
                 email_subject = "Please Active your Email"
                 current_side = get_current_site(request)
 
+                context = {
+                    'user':user,
+                    'domain':current_side,
+                    'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token':default_token_generator.make_token(user),
+                }
                 message = render_to_string('account/verification.html',context)
                 send_email = EmailMessage(email_subject,message,to=[email])
                 send_email.send()
@@ -49,14 +50,12 @@ def registration(request):
             except:
                 pass
 
-            return redirect(f'/account/login/?command=verification$email='+email)
+            return redirect(f'/account/login/?command=verification&email='+email)
 
         else:
             messages.error(request,"User is already register")
-            return redirect('/account/registration/?&email='+email+'&uid='+context.uid)
-            return register('registration')
-
-            
+            # return redirect('/account/registration/?&email='+email+'&uid='+context.uid)
+            return redirect('registration')           
             
         
     else:

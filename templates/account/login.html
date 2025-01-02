@@ -18,6 +18,9 @@
 	<!-- End Banner Area -->
 
 	<!--================Login Box Area =================-->
+	{% if request.GET.command == 'verification' %}
+	<h1>user please cheak mail and verification in cheak mail</h1>
+	{% else %}
 	<section class="login_box_area section_gap">
 		<div class="container">
 			<div class="row">
@@ -31,9 +34,6 @@
 						</div>
 					</div>
 				</div>
-				{% if request.GET.command == 'verification' %}
-				<h1>user please registration</h1>
-				{% else %}
 				<div class="col-lg-6">
 					<div class="login_form_inner">
 						<h3>Log in to enter</h3>

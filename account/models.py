@@ -40,7 +40,7 @@ class registration(AbstractBaseUser):
     username = models.CharField(max_length=200)
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
-    phone = models.CharField(max_length=200)
+    phone = models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
