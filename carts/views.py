@@ -16,16 +16,16 @@ def add_to_cart(request,product_id):
     pro = product.objects.get(id=product_id)
 
     try:
-        cart = Cart.objects.get(session_id=_cart_id(request))
+        cart = Cart.objects.get(cart_id=_cart_id(request))
     except:
-        cart = Cart.objects.create(session_id=_cart_id(request))
+        cart = Cart.objects.create(cart_id=_cart_id(request))
 
     try:
         cart_products = CartItem.objects.get(product=pro,cart=cart)
         cart_products.quantity += 1
         cart_products.save()
-    except CartItem.DoesNotExist:
-        CartItem.objects.create(
+    except:
+        cart_products = CartItem.objects.create(
             product=pro,
             cart=cart,
             quantity=1
@@ -34,15 +34,13 @@ def add_to_cart(request,product_id):
 
 
 def cart(request):
+    total = 0
 
-    try:
-        cart = Cart.objects.get(session_id=_cart_id)
-        cart_item = CartItem.objects.filter(cart=cart)
-    except Cart.DoesNotExist:
-        cart_item = []
+    cart_items = CartItem.objects.filter(cart__cart_id=_cart_id(request))
 
     context = {
-        'cart_items':cart_item,
+        'cart_items':cart_items,
+        'total':total,
     }
 
     return render(request,'store/cart.html',context)
