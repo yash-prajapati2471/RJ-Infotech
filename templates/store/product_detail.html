@@ -9,8 +9,8 @@
           <h1>Product Details Page</h1>
           <nav class="d-flex align-items-center">
             <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-            <a href="#">{{single_product.category}}<span class="lnr lnr-arrow-right"></span></a>
-            <a href="single-product.html">{{single_product.product_name}}</a>
+            <a href="#">{{ single_product.category }}<span class="lnr lnr-arrow-right"></span></a>
+            <a href="single-product.html">{{ single_product.product_name }}</a>
           </nav>
         </div>
       </div>
@@ -25,42 +25,40 @@
         <div class="col-lg-6">
           <div class="s_Product_carousel">
             <div class="single-prd-item">
-              <img class="img-fluid" src="{{single_product.product_image.url}}" alt="" />
+              <img class="img-fluid" src="{{ single_product.product_image.url }}" alt="" />
             </div>
             <div class="single-prd-item">
-              <img class="img-fluid" src="{{single_product.product_image.url}}" alt="" />
+              <img class="img-fluid" src="{{ single_product.product_image.url }}" alt="" />
             </div>
             <div class="single-prd-item">
-              <img class="img-fluid" src="{{single_product.product_image.url}}" alt="" />
+              <img class="img-fluid" src="{{ single_product.product_image.url }}" alt="" />
             </div>
           </div>
         </div>
         <div class="col-lg-5 offset-lg-1">
           <div class="s_product_text">
-            <h3>{{single_product.product_name}}</h3>
-            <h2>₹{{single_product.product_price}}</h2>
+            <h3>{{ single_product.product_name }}</h3>
+            <h2>₹{{ single_product.product_price }}</h2>
             <ul class="list">
               <li>
-                <a class="active" href="#"><span>Category</span> : {{single_product.category}}</a>
+                <a class="active" href="#"><span>Category</span> : {{ single_product.category }}</a>
               </li>
               <li>
                 <a href="#"><span>Availibility</span> : In Stock</a>
               </li>
             </ul>
-            <p>{{single_product.product_detail}}</p>
+            <p>{{ single_product.product_detail }}</p>
             <div class="product_count">
               <label for="qty">Quantity:</label>
               <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty" />
               <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
               <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
             </div>
-            <a href="{% url 'add_to_cart' single_product.id %}">
             <div class="card_area d-flex align-items-center">
-							<a class="primary-btn" href="{% url 'add_to_cart' single_product.id %}">Add to Cart</a>
-							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-							<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-						</div>
-          </a>
+              <a class="primary-btn" href="{% url 'add_to_cart' single_product.id %}">Add to Cart</a>
+              <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
+              <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+            </div>
           </div>
         </div>
       </div>
