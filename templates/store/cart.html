@@ -8,8 +8,8 @@
         <div class="col-first">
           <h1>Shopping Cart</h1>
           <nav class="d-flex align-items-center">
-            <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-            <a href="category.html">Cart</a>
+            <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+            <a href="{% url 'cart' %}">Cart</a>
           </nav>
         </div>
       </div>
@@ -49,19 +49,21 @@
                   </td>
                   <td>
                     <div class="product_count">
-                      <input type="text" name="qty" id="sst" maxlength="12" value="{{ i.quantity }}" title="Quantity:" class="input-text qty" />
-                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                      <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                      <input type="text" name="qty" id="sst" maxlength="12" value="{{ i.quantity }}" title="Quantity:" class="input-text qty" readonly />
+
+                      <a href="{% url 'add_to_cart' i.product.id %}"><button class="increase items-minus" type="button"><i class="lnr lnr-chevron-up"></i></button></a>
+
+                      <a href="{% url 'decrease' i.product.id %}"><button class="reduced items-plus" type="button"><i class="lnr lnr-chevron-down"></i></button></a>
                     </div>
                   </td>
                   <td>
-                    <h5>₹{{ i.quantity }}</h5>
+                    <h5>₹{{ i.sub_total }}</h5>
                   </td>
                 </tr>
               {% endfor %}
               <tr class="bottom_button">
                 <td>
-                  <a class="gray_btn" href="#">Update Cart</a>
+                  <a class="gray_btn" href="{% url 'store' %}">Update Cart</a>
                 </td>
                 <td></td>
                 <td></td>
@@ -80,7 +82,7 @@
                   <h5>Subtotal</h5>
                 </td>
                 <td>
-                  <h5>$2160.00</h5>
+                  <h5>₹2160.00</h5>
                 </td>
               </tr>
               <tr class="shipping_area">

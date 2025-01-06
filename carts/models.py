@@ -14,8 +14,8 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
-    def __str__(self):
-        return self.product.product_name * self.quantity
+    def sub_total(self):
+        return self.product.product_price * self.quantity
     
     def __str__(self):
         return self.product.product_name

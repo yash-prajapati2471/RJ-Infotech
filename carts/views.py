@@ -45,3 +45,22 @@ def cart(request):
 
     return render(request,'store/cart.html',context)
 
+def decrease(request,product_id):
+    pro = product.objects.get(id=product_id)
+
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_item = CartItem.objects.get(product=pro,cart=cart)
+
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+
+        else:
+            cart_item.delete()
+            
+    except CartItem.DoesNotExist:
+        pass
+
+    return redirect('cart')
+
