@@ -1,5 +1,6 @@
 from django.urls import path
 from store.views import *
+from account.views import *
 
 urlpatterns = [
     path('',store,name='store'),
@@ -8,5 +9,7 @@ urlpatterns = [
 
     path('<category_slug>/<product_slug>/',product_detail,name='product_detail'),
 
-    
+    path('search',search,name='search'),   
+
+    path('cheakout',cheakout,name='cheakout'), 
 ]

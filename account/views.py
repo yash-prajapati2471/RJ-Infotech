@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required 
 # Create your views here.
 
 def registration(request):
@@ -99,3 +100,4 @@ def verification(request,uid64,token):
         return redirect('login')
     else:
         return redirect('registration')
+    

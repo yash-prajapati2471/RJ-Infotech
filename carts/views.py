@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from store.models import product
 from django.http import HttpResponse
 from carts.models import *
+from store.models import *
 
 # Create your views here.
 
@@ -14,6 +15,16 @@ def _cart_id(request):
 
 def add_to_cart(request,product_id):
     pro = product.objects.get(id=product_id)
+
+    colors = Veriation.objects.filter(Veriation_category="color")
+    sizes = Veriation.objects.filter(Veriation_category="size")
+
+    if request.method == "POST":
+        for item in request.POST:
+            key = item
+            value = request.POST[item]
+            print(value)
+
 
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -38,9 +49,18 @@ def cart(request):
 
     cart_items = CartItem.objects.filter(cart__cart_id=_cart_id(request))
 
+    for i in cart_items:
+        total += (i.product.product_price * i.quantity)
+
+    text = (2*total)/100 
+
+    grand_total = text + total
+
     context = {
         'cart_items':cart_items,
         'total':total,
+        'text':text,
+        'grand_total':grand_total
     }
 
     return render(request,'store/cart.html',context)

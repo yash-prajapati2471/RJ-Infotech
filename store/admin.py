@@ -7,3 +7,5 @@ class AdminProduct(admin.ModelAdmin):
     prepopulated_fields = {'slug':('product_name',)}
 
 admin.site.register(product,AdminProduct)
+
+admin.site.register(Veriation)
