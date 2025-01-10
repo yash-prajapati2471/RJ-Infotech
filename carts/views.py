@@ -16,31 +16,33 @@ def _cart_id(request):
 def add_to_cart(request,product_id):
     pro = product.objects.get(id=product_id)
 
-    colors = Veriation.objects.filter(Veriation_category="color")
-    sizes = Veriation.objects.filter(Veriation_category="size")
 
     if request.method == "POST":
-        for item in request.POST:
-            key = item
-            value = request.POST[item]
-            print(value)
+        # for item in request.POST:
+        #     key = item
+        #     value = request.POST[item]
+        #     print(value)
+        selected_color = request.POST.get('color')
+        selected_size = request.POST.get('size')
 
 
-    try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
-    except:
-        cart = Cart.objects.create(cart_id=_cart_id(request))
+        try:
+            cart = Cart.objects.get(cart_id=_cart_id(request))
+        except:
+            cart = Cart.objects.create(cart_id=_cart_id(request))
 
-    try:
-        cart_products = CartItem.objects.get(product=pro,cart=cart)
-        cart_products.quantity += 1
-        cart_products.save()
-    except:
-        cart_products = CartItem.objects.create(
-            product=pro,
-            cart=cart,
-            quantity=1
-        )
+        try:
+            cart_products = CartItem.objects.get(product=pro,cart=cart,color=selected_color,size=selected_size)
+            cart_products.quantity += 1
+            cart_products.save()
+        except:
+            cart_products = CartItem.objects.create(
+                product=pro,
+                cart=cart,
+                color=selected_color,
+                size=selected_size,
+                quantity=1
+            )
     return redirect('cart')
 
 

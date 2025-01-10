@@ -57,8 +57,8 @@
                 <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
               </div><br />
 
-              <select class="form" name="color" aria-label="Default select example" required>
-                <option selected>Color</option>
+              <select class="form" name="color"  required>
+                <option selected disabled>Color</option>
                 {% for color in single_product.veriation_set.all %}
                   {% if color.Veriation_category == 'color' %}
                     <option value="{{ color.Veriation_value }}">{{ color.Veriation_value }}</option>
@@ -67,7 +67,7 @@
               </select>
 
               <select class="form mt-3" name="size" aria-label="Default select example" required>
-                <option selected>Size</option>
+                <option selected disabled>Size</option>
                 {% for size in single_product.veriation_set.all %}
                   {% if size.Veriation_category == 'size' %}
                     <option value="{{ size.Veriation_value }}">{{ size.Veriation_value }}</option>
@@ -78,20 +78,12 @@
               {% if single_product.product_stock <= 0 %}
                 <h1>Product out of stock</h1>
               {% else %}
-                {% if cartitem %}
-                  <div class="card_area d-flex align-items-center">
-                    <a class="primary-btn" href="{% url 'cart' %}">View Cart</a>
-                    <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-                    <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-                  </div>
-                {% else %}
-                  <div class="card_area d-flex align-items-center">
-                    <button type="submit" href="{% url 'add_to_cart' single_product.id %}" class="primary-btn">Add to Cart</button>
-                    <!-- <a class="primary-btn" href="{% url 'add_to_cart' single_product.id %}">Add to Cart</a> -->
-                    <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-                    <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-                  </div>
-                {% endif %}
+                <div class="card_area d-flex align-items-center">
+                  <button type="submit" href="{% url 'add_to_cart' single_product.id %}" class="primary-btn">Add to Cart</button>
+                  <!-- <a class="primary-btn" href="{% url 'add_to_cart' single_product.id %}">Add to Cart</a> -->
+                  <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
+                  <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                </div>
               {% endif %}
             </div>
           </form>

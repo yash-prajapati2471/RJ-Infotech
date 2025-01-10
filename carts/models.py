@@ -13,6 +13,9 @@ class CartItem(models.Model):
     product = models.ForeignKey(product,on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+    variation = models.ManyToManyField(Veriation,blank=True)
+    color = models.CharField(max_length=200,null=True,blank=True)
+    size = models.CharField(max_length=200,null=True,blank=True)
 
     def sub_total(self):
         return self.product.product_price * self.quantity
