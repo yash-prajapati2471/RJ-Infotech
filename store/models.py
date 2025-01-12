@@ -35,4 +35,4 @@ class Veriation(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.Product.product_name
+        return self.Veriation_value

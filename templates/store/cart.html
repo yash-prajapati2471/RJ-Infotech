@@ -41,8 +41,11 @@
                       </div>
                       <div class="media-body">
                         <h2>{{ i.product.product_name }}</h2>
-                        <p>color = {{ i.color }}</p>
-                        <p>size = {{ i.size }}</p>
+                        <p>
+                          {% for sc in i.variation.all %}
+                            {{ sc.Veriation_category }} : {{ sc.Veriation_value }} <br />
+                          {% endfor %}
+                        </p>
                       </div>
                     </div>
                   </td>
@@ -55,7 +58,7 @@
 
                       <a href="{% url 'add_to_cart' i.product.id %}"><button class="increase items-minus" type="button"><i class="lnr lnr-chevron-up"></i></button></a>
 
-                      <a href="{% url 'decrease' i.product.id %}"><button class="reduced items-plus" type="button"><i class="lnr lnr-chevron-down"></i></button></a>
+                      <a href="{% url 'decrease' i.product.id i.id %}"><button class="reduced items-plus" type="button"><i class="lnr lnr-chevron-down"></i></button></a>
                     </div>
                   </td>
                   <td>
@@ -81,14 +84,14 @@
                 <td></td>
                 <td></td>
                 <td>
-                  <h5>Flat Tax:</h5><br>
-                  <h5>Delivery Charges:</h5><br>
+                  <h5>Flat Tax:</h5><br />
+                  <h5>Delivery Charges:</h5><br />
                   <h5>Sub Total:</h5>
                 </td>
                 <td>
-                  <h5>₹{{text}}</h5><br>
-                  <h5>Free</h5><br>
-                  <h5>₹{{total}}</h5>
+                  <h5>₹{{ text }}</h5><br />
+                  <h5>Free</h5><br />
+                  <h5>₹{{ total }}</h5>
                 </td>
               </tr>
               <tr>
@@ -98,10 +101,10 @@
                   <h5>Total Amount:</h5>
                 </td>
                 <td>
-                  <h5>₹{{grand_total}}</h5>
+                  <h5>₹{{ grand_total }}</h5>
                 </td>
               </tr>
-              
+
               <tr class="out_button_area">
                 <td></td>
                 <td></td>
