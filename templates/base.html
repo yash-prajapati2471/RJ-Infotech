@@ -85,9 +85,15 @@
                 <li class="nav-item submenu dropdown">
                   <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages</a>
                   <ul class="dropdown-menu">
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" aria-readonly="true">{{request.user.firstname}}</a>
+                    </li>
+                    {% else %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'registration' %}">Register</a>
                     </li>

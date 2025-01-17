@@ -52,14 +52,5 @@ def search(request):
         }
     return render(request,'store/products.html',context)
 
-@login_required(login_url='login')
-def cheakout(request):
-    user = request.user
-
-    if user is not None:
-        return render(request,'store/cheakout.html')
-    else:
-        return HttpResponse("Sorry")
-
 
 

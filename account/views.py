@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import RegisterForm
+from carts.models import *
+from carts.views import _cart_id
 from django.http import HttpResponse
 from django.core.mail import EmailMessage       
 from .models import registration as register
@@ -29,8 +31,8 @@ def registration(request):
             username = email.split("@")[0]
 
             user = register.objects.create_user(firstname=firstname,lastname=lastname,email=email,phone=phone,username=username,password=password)
-            messages.success(request,"You have Register Success,please cheak out your email")
             user.save()
+            messages.success(request,"You have Register Success,please cheak out your email")
 
             
 
@@ -77,8 +79,38 @@ def login(request):
         user = authenticate(request,username=username,password=password)
 
         if user is not None:
-            messages.success(request,"You have login success")
+
+            try:
+                # Merge session cart items into user's cart
+                session_cart_id = _cart_id(request)
+                session_cart_items = CartItem.objects.filter(cart__cart_id=session_cart_id)
+                user_cart_items = CartItem.objects.filter(user=user)
+
+                for session_item in session_cart_items:
+                    matching_user_items = user_cart_items.filter(
+                        product=session_item.product
+                    ).prefetch_related('variation')
+
+                    found_match = False
+                    for user_item in matching_user_items:
+                        if set(user_item.variation.all()) == set(session_item.variation.all()):
+                            user_item.quantity += session_item.quantity
+                            user_item.save()
+                            found_match = True
+                            break
+
+                    if not found_match:
+                        session_item.user = user
+                        session_item.cart = None  # Detach from session cart
+                        session_item.save()
+
+                # Delete the session cart after merging
+                session_cart_items.delete()
+            except:
+                pass
+
             user_login(request,user)
+            messages.success(request,"You have login success")
             return redirect('index')
         else:
             messages.success(request,"Wrong Email And Password.")

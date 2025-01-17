@@ -56,7 +56,7 @@
                     <div class="product_count">
                       <input type="text" name="qty" id="sst" maxlength="12" value="{{ i.quantity }}" title="Quantity:" class="input-text qty" readonly />
 
-                      <a href="{% url 'add_to_cart' i.product.id %}"><button class="increase items-minus" type="button"><i class="lnr lnr-chevron-up"></i></button></a>
+                      <a href="{% url 'plus' i.product.id i.id %}"><button class="increase items-minus" type="button"><i class="lnr lnr-chevron-up"></i></button></a>
 
                       <a href="{% url 'decrease' i.product.id i.id %}"><button class="reduced items-plus" type="button"><i class="lnr lnr-chevron-down"></i></button></a>
                     </div>
