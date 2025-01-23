@@ -7,6 +7,7 @@ from django.core.mail import EmailMessage
 from .models import registration as register
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as user_login
+from django.contrib.auth import logout as log_out
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -110,8 +111,9 @@ def login(request):
                 pass
 
             user_login(request,user)
+            next_url = request.GET.get('next','index')
             messages.success(request,"You have login success")
-            return redirect('index')
+            return redirect(next_url)
         else:
             messages.success(request,"Wrong Email And Password.")
             return redirect('login')
@@ -133,3 +135,7 @@ def verification(request,uid64,token):
     else:
         return redirect('registration')
     
+
+def logout(request):
+    log_out(request)
+    return redirect('login')

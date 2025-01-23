@@ -138,5 +138,22 @@ def decrease(request,product_id,cart_item_id):
 
 @login_required(login_url='login')
 def cheakout(request):
-    return render(request,'store/cheakout.html')
+    total = 0
+
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    for i in cart_items:
+        total += (i.product.product_price * i.quantity)
+
+    text = (2*total)/100 
+
+    grand_total = text + total
+
+    context = {
+        'cart_items':cart_items,
+        'total':total,
+        'text':text,
+        'grand_total':grand_total
+    }
+    return render(request,'store/cheakout.html',context)
 

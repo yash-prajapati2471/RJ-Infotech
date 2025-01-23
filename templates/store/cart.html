@@ -17,6 +17,7 @@
   </section>
   <!-- End Banner Area -->
 
+{% if cart_items %}
   <!-- ================Cart Area ================= -->
   <section class="cart_area">
     <div class="container">
@@ -123,4 +124,8 @@
     </div>
   </section>
   <!-- ================End Cart Area ================= -->
+   {% else %}
+   <h1 align="center">Your cart is empty!</h1>
+   <a href="{% url 'store' %}" class="primary-btn">Return to Store</a>
+  {% endif %}
 {% endblock %}
