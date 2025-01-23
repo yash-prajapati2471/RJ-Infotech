@@ -6,10 +6,10 @@
     <div class="container">
       <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
         <div class="col-first">
-          <h1>Checkout</h1>
+          <h1>Final Checkout</h1>
           <nav class="d-flex align-items-center">
             <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
-            <a href="{% url 'cheakout' %}">Checkout</a>
+            <p class="inr inr-arrow-right">Final</p>
           </nav>
         </div>
       </div>
@@ -81,7 +81,27 @@ var options = {
         "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
     },
     "handler": function (response){
-        
+        fetch("{% url 'payment' %}",{
+          method:"POST",
+          headers:{
+            "Content-type":"application/json",
+            "X-CSRFToken":"{{csrf_token}}",
+          },
+          body:JSON.stringify({
+            "razorpay_payment_id":response.razorpay_payment_id,
+            "Amount":"{{grand_total}}",
+            "Order":"{{order}}",
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.success){
+            alert("Payment Success")
+          }
+          else{
+            alert("Payment Failed")
+          }
+        })
     },
 };
 var rzp1 = new Razorpay(options);
