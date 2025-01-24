@@ -87,18 +87,18 @@
                   <ul class="dropdown-menu">
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                      <a class="nav-link" aria-readonly="true">{{request.user.firstname}}</a>
+                      <a class="nav-link" href="{% url 'UserDashboard' %}" aria-readonly="true">{{request.user.firstname}}</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration' %}">Register</a>
+                    </li>
                     {% endif %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'registration' %}">Register</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="tracking.html">Tracking</a>

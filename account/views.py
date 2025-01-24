@@ -1,4 +1,6 @@
 from django.shortcuts import render,redirect
+
+from orders.models import Order
 from .forms import RegisterForm
 from carts.models import *
 from carts.views import _cart_id
@@ -15,6 +17,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 def registration(request):
@@ -139,3 +142,82 @@ def verification(request,uid64,token):
 def logout(request):
     log_out(request)
     return redirect('login')
+
+@login_required(login_url='login')
+def UserDashboard(request):
+
+    orders = Order.objects.filter(user=request.user).all()
+    
+    context = {
+        'orders':orders,
+    }
+
+    return render(request,'account/user_dashboard.html',context)
+
+def forget_password(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+
+        try:
+            user = register.objects.get(email=email)
+            
+            email_subject = "Reset Your Password"
+            current_side = get_current_site(request)
+
+            context = {
+                'user':user,
+                'domain':current_side,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':default_token_generator.make_token(user),
+            }
+            message = render_to_string('account/password_reset_email.html',context)
+            send_email = EmailMessage(email_subject,message,to=[email])
+            messages.success(request, "A reset link has been sent to your email.")
+            send_email.send()
+
+        except:
+            pass
+
+            return redirect(f'/account/newpassword/?command=password_reset_email&email='+email)
+
+    return render(request,'account/forget_password.html')
+
+def newpassword(request):
+
+    user_email = request.session.get('uid')
+
+    if not user_email:
+        messages.success(request,"Session expired.")
+        return redirect('forget_password')
+
+    if request.method == "POST":
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        print(new_password)
+
+        if new_password==confirm_password:
+            user = register.objects.get(email=user_email)
+            print(user)
+            user.password = make_password(new_password)
+            user.save()
+            del request.session['uid']
+            messages.success(request, "Your password has been reset successfully.")
+            return redirect('login')
+
+        else:
+            pass
+            
+    return render(request,'account/newpassword.html')
+
+
+def password_reset_email(request,uid64,token):
+    try:
+        userid = urlsafe_base64_decode(uid64).decode()
+        user = register._default_manager.get(id=userid)
+        if default_token_generator.check_token(user,token):
+            request.session['uid'] = user.email
+            return redirect('newpassword')
+    except:
+        pass
+
+    return redirect('forget_password')

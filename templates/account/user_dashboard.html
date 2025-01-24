@@ -1,0 +1,6 @@
+{{request.user.firstname}}<br>
+{{request.user.lastname}}<br>
+
+{% for i in orders %}
+    {{i.order_number}}
+{% endfor %}

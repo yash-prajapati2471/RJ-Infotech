@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Confirmation</h1>
+					<nav class="d-flex align-items-center">
+						<a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
+						<p>Confirmation</p>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Order Details Area =================-->
+	<section class="order_details section_gap">
+		<div class="container">
+			<h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+			<div class="row order_d_inner">
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Order Info</h4>
+						<ul class="list">
+							<li><a href="#"><span>Order number</span> : {{order}}</a></li>
+							<li><a href="#"><span>First Name</span> : {{first_name}}</a></li>
+							<li><a href="#"><span>Last Name</span> : {{last_name}}</a></li>
+							<li><a href="#"><span>Total</span> : {{grand_total}}</a></li>
+							<li><a href="#"><span>Payment method</span> : Online</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Billing Address</h4>
+						<ul class="list">
+							<li><a href="#"><span>Street 1</span> : {{address_line_1}}</a></li>
+							<li><a href="#"><span>Street 2</span> : {{address_line_2}}</a></li>
+							<li><a href="#"><span>City</span> : {{city}}</a></li>
+							<li><a href="#"><span>Country</span> : {{country}}</a></li>
+							<li><a href="#"><span>Postcode </span> : 382350</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="order_details_table">
+				<h2>Order Details</h2>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Product</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">Variatios</th>
+								<th scope="col">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+                            {% for i in order_products %}
+                            <tr>
+								<td>
+									<p>{{i.product.product_name}}</p>
+								</td>
+								<td>
+                                    <h5>x {{i.quantity}}</h5>
+								</td>
+								<td>
+                                    {% for variation in i.variations.all %}
+                                        {{ variation.Veriation_category }}=
+                                        {{ variation.Veriation_value }}<br>
+                                    {% endfor %}
+								</td>
+								<td>
+                                    <p>₹{{i.product.product_price}}</p>
+								</td>
+							</tr>
+                            {% endfor %}
+							<tr>
+								<td>
+									<h4>Tax</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p>₹{{tax}}</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h4>Shipping</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p>Flat rate: Free</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h4>Subtotal</h4>
+								</td>
+								<td>
+									<h5></h5>
+								</td>
+								<td>
+									<p>₹{{grand_total}}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+
+    <style>
+        .center-button {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+    </style>
+    
+
+    <div class="center-button">
+    <a href="{% url 'index' %}" class="primary-btn">Home</a>
+</div>
+	<!--================End Order Details Area =================-->
+
+{% endblock %}

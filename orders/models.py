@@ -13,7 +13,7 @@ class Payment(models.Model):
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.payment_id
     
 order_status = {
@@ -58,5 +58,5 @@ class OrderProduct(models.Model):
     is_ordedred = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.order.order_number

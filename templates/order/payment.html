@@ -96,7 +96,9 @@ var options = {
         .then(response => response.json())
         .then(data => {
           if(data.success){
-            alert("Payment Success")
+            orderid = data.OrderId
+            console.log(orderid)
+            window.location.href = "{% url 'order_complete' %}" + '?ordernumber=' + orderid;
           }
           else{
             alert("Payment Failed")

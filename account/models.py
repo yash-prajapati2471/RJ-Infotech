@@ -62,3 +62,7 @@ class registration(AbstractBaseUser):
     
     def has_perm(self,perm,obj=None):
         return self.is_admin
+    
+class UserProfile(models.Model):
+    user = models.ForeignKey(registration,on_delete=models.CASCADE)
+    profile_image = models.ImageField(upload_to="profile_pic")

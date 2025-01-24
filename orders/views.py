@@ -8,14 +8,21 @@ import razorpay
 import json
 # Create your views here.
 
+from django.core.mail import EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+
 @csrf_exempt
 def payment(request):
     data = json.loads(request.body)
-    print(data['Order'])
+
     payment_id = data["razorpay_payment_id"]
+    useremail = request.user.email
 
     order = Order.objects.get(user=request.user,is_ordered=False,order_number=data['Order'])
-    print(order)
 
     try:
         payment = Payment(
@@ -55,7 +62,26 @@ def payment(request):
 
         cart_item.delete()
 
-        ds = {"success":True}
+        try:
+            email_subject = "Thank Your For Your Order."
+            current_side = get_current_site(request)
+
+            context = {
+                'user':request.user,
+                'domain':current_side,
+                'order':order,
+            }
+            message = render_to_string('order/order_confirm.html',context)
+            send_email = EmailMessage(email_subject,message,to=[useremail])
+            send_email.send()
+
+        except:
+            pass
+
+        ds = {
+        "success":True,
+        "OrderId":order.order_number,
+        }
         return JsonResponse(ds)
 
     except:
@@ -123,3 +149,42 @@ def place_order(request):
         }
 
         return render(request,'order/payment.html',context)
+    
+
+def order_complete(request):
+
+    try:
+        orderid = request.GET.get("ordernumber")
+        order = Order.objects.get(order_number=orderid)
+
+        order_products = OrderProduct.objects.filter(order=order)
+
+        grand_total = float(order.total)
+        tax = float(order.tax)
+        address_line_1 = order.address_line_1
+        address_line_2 = order.address_line_2
+        city = order.city
+        country = order.country
+        first_name = order.first_name
+        last_name = order.last_name
+
+
+
+        print(order)
+    except:
+        pass
+
+    context = {
+        'order':order,
+        'grand_total':grand_total,
+        'tax':tax,
+        'address_line_1':address_line_1,
+        'address_line_2':address_line_2,
+        'city':city,
+        'country':country,
+        'first_name':first_name,
+        'last_name':last_name,
+        'order_products':order_products,
+    }
+
+    return render(request,"order/order_complete.html",context)
