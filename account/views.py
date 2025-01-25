@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 
-from orders.models import Order
-from .forms import RegisterForm
+from orders.models import Order, OrderProduct, Payment
+from .forms import *
 from carts.models import *
 from carts.views import _cart_id
 from django.http import HttpResponse
@@ -141,18 +141,8 @@ def verification(request,uid64,token):
 
 def logout(request):
     log_out(request)
+    messages.success(request,"You have logout successfully.")
     return redirect('login')
-
-@login_required(login_url='login')
-def UserDashboard(request):
-
-    orders = Order.objects.filter(user=request.user).all()
-    
-    context = {
-        'orders':orders,
-    }
-
-    return render(request,'account/user_dashboard.html',context)
 
 def forget_password(request):
     if request.method == "POST":
@@ -178,26 +168,19 @@ def forget_password(request):
         except:
             pass
 
-            return redirect(f'/account/newpassword/?command=password_reset_email&email='+email)
+        return redirect(f'/account/newpassword/?command=password_reset_email&email='+email)
 
     return render(request,'account/forget_password.html')
 
 def newpassword(request):
 
-    user_email = request.session.get('uid')
-
-    if not user_email:
-        messages.success(request,"Session expired.")
-        return redirect('forget_password')
-
     if request.method == "POST":
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
-        print(new_password)
 
         if new_password==confirm_password:
+            user_email = request.session.get('uid')
             user = register.objects.get(email=user_email)
-            print(user)
             user.password = make_password(new_password)
             user.save()
             del request.session['uid']
@@ -221,3 +204,53 @@ def password_reset_email(request,uid64,token):
         pass
 
     return redirect('forget_password')
+
+@login_required(login_url='login')
+def UserDashboard(request):
+
+    user = request.user
+    user_profile,created = UserProfile.objects.get_or_create(user=user)
+
+    account_form = AccountForm(instance=user)
+    profile_form  = ProfileForm(instance=user_profile)
+
+    if request.method == "POST":
+        account_form = AccountForm(request.POST,instance=user)
+        profile_form = ProfileForm(request.POST,request.FILES,instance=user_profile)
+
+        if account_form.is_valid() and profile_form.is_valid():
+            account_form.save()
+            profile_form.save()
+            messages.success(request,"Profile updated successfully!")
+            return redirect('index')
+    
+    context = {
+        'account_form':account_form,
+        'profile_form':profile_form,
+    }
+
+    return render(request,'account/user_dashboard.html',context)
+
+@login_required(login_url='login')
+def UserOrders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    context = {
+        'orders':orders,
+    }
+    return render(request,'account/UserOrders.html',context)
+
+@login_required(login_url='login')
+def UserOrderDetails(request,ordeid):
+    other_details = Order.objects.get(id=ordeid)
+
+    orderdetails = OrderProduct.objects.filter(order=other_details) 
+
+    payment_details = Payment.objects.get(payment_id=other_details.payment)
+
+    context = {
+        'other_details':other_details,
+        'orderdetails':orderdetails,
+        'payment_details':payment_details
+    }
+    return render(request,'account/UserOrderDetails.html',context)

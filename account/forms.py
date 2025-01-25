@@ -28,3 +28,27 @@ class RegisterForm(forms.ModelForm):
         for i in self.fields:
             self.fields[i].widget.attrs['class'] = "form-control"
 
+    
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = registration
+        fields = ['firstname','lastname','email','phone']
+
+    def __init__(self,*args,**kwargs):
+        super(AccountForm,self).__init__(*args,**kwargs)
+
+        for i in self.fields:
+            self.fields[i].widget.attrs['class'] = "form-control"
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+
+    def __init__(self,*args,**kwargs):
+        super(ProfileForm,self).__init__(*args,**kwargs)
+
+        for i in self.fields:
+            self.fields[i].widget.attrs['class'] = "form-control"
+
+

@@ -13,4 +13,6 @@ urlpatterns = [
     path('forget_password/',forget_password,name='forget_password'),
     path('newpassword/',newpassword,name='newpassword'),
     path('password_reset_email/<uid64>/<token>/',password_reset_email,name='password_reset_email'),
+    path('UserOrders/',UserOrders,name='UserOrders'),
+    path('UserOrderDetails/<ordeid>/',UserOrderDetails,name='UserOrderDetails'),
 ]
