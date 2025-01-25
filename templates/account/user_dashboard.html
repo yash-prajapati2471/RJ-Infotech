@@ -31,9 +31,8 @@
                       <!-- Profile Picture -->
                       <div class="col-md-12 form-group text-center">
                           <img src="{{profile_form.instance.profile_image.url}}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-                          <input type="file" id="profilePicture" name="profile_image" class="form-control mt-2">
-                      </div>
-
+                          {{profile_form.profile_image}}
+                        </div>
                       <!-- User Details -->
                       <div class="col-md-12">
                           {{ account_form.as_p }}

@@ -209,7 +209,7 @@ def password_reset_email(request,uid64,token):
 def UserDashboard(request):
 
     user = request.user
-    user_profile,created = UserProfile.objects.get_or_create(user=user)
+    user_profile = UserProfile.objects.get(user=user)
 
     account_form = AccountForm(instance=user)
     profile_form  = ProfileForm(instance=user_profile)

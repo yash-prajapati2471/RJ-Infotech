@@ -41,9 +41,10 @@ class AccountForm(forms.ModelForm):
             self.fields[i].widget.attrs['class'] = "form-control"
 
 class ProfileForm(forms.ModelForm):
+    profile_image =  forms.ImageField(required=False,widget=forms.FileInput)
     class Meta:
         model = UserProfile
-        fields = "__all__"
+        fields = ['profile_image',]
 
     def __init__(self,*args,**kwargs):
         super(ProfileForm,self).__init__(*args,**kwargs)
