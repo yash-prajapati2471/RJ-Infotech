@@ -31,8 +31,9 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="{% url 'UserDashboard' %}">Profile</a>
-    <a href="{% url 'UserOrders' %}">Order</a>
-    <a href="{% url 'logout' %}">Logout</a>
+    <a href="{% url 'UserDashboard' %}" class="btn btn-style {% if 'UserDashboard' in request.path %} active {% else %} {% endif %}">Profile</a>
+    <a href="{% url 'change_password' %}" class="btn btn-style {% if 'change_password' in request.path %} active {% else %} {% endif %}">Change Password</a>
+    <a href="{% url 'UserOrders' %}" class="btn btn-style {% if 'UserOrders' in request.path %} active {% else %} {% endif %}">Order</a>
+    <a href="{% url 'logout' %}" class="btn btn-style {% if 'logout' in request.path %} active {% else %} {% endif %}">Logout</a>
   </nav>
 

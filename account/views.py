@@ -1,4 +1,6 @@
+import datetime
 from django.shortcuts import render,redirect
+from weasyprint import HTML
 
 from orders.models import Order, OrderProduct, Payment
 from .forms import *
@@ -17,7 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 # Create your views here.
 
 def registration(request):
@@ -232,6 +234,32 @@ def UserDashboard(request):
     return render(request,'account/user_dashboard.html',context)
 
 @login_required(login_url='login')
+def change_password(request):
+    if request.method == "POST":
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+
+        user = request.user
+
+        if not check_password(current_password,user.password):
+            messages.error(request,'The Current Password is incorrect.')
+            return redirect('change_password')
+        
+        if new_password != confirm_password:
+            messages.success(request,'New password and confirm password do not match.')
+            return redirect('change_password')
+        
+        user.set_password(new_password)
+        user.save()
+
+        messages.success(request,'Your password has been changed successfully.')
+        return redirect('index')
+
+
+    return render(request,'account/change_password.html')
+
+@login_required(login_url='login')
 def UserOrders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
 
@@ -254,3 +282,39 @@ def UserOrderDetails(request,ordeid):
         'payment_details':payment_details
     }
     return render(request,'account/UserOrderDetails.html',context)
+
+@login_required(login_url='login')
+def generate_invoice(request,order_id):
+
+    try:
+        order = Order.objects.get(id=order_id)
+    except:
+        return HttpResponse("Order not found.",status=404)
+    
+    order_product = OrderProduct.objects.filter(order=order)
+
+    payment = order.payment
+
+    grand_total = order.total
+
+    invoice_data = {
+        "date": order.created_at.strftime("%d-%m-%Y"),
+        "invoice_id": f"INV-{order_id}",
+        "customer_name": f"{order.first_name} {order.last_name}",
+        "customer_address": f"{order.address_line_1}, {order.address_line_2}, {order.city}, {order.state}, {order.country}",
+        "order_number": order.order_number,
+        "payment_method": payment.payment_method,
+        "order_product": order_product,
+        "total": order.total,
+        "tax":order.tax,
+        "grand_total": grand_total,
+    }
+
+    html_content = render_to_string('invoice.html', invoice_data)
+
+    # Generate PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="invoice_{order_id}.pdf"'
+
+    HTML(string=html_content).write_pdf(response)
+    return response

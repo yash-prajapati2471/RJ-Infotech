@@ -6,10 +6,10 @@
   <div class="container">
     <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
       <div class="col-first">
-        <h1>User Dashboard</h1>
+        <h1>User Order</h1>
         <nav class="d-flex align-items-center">
           <a href="{% url 'index' %}">Home<span class="lnr lnr-arrow-right"></span></a>
-          <p>User Dashboard</p>
+          <p>User Order</p>
         </nav>
       </div>
     </div>
@@ -79,6 +79,7 @@
         <td>{{i.total}}</td>
         <td>
         <a href="{% url 'UserOrderDetails' i.id %}" class="btn btn-primary">View</a>
+        <a href="{% url 'generate_invoice' i.id %}" class="btn btn-primary">Invoice</a>
     </td>
       </tr>
       {% endfor %}

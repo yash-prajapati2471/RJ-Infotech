@@ -15,4 +15,7 @@ urlpatterns = [
     path('password_reset_email/<uid64>/<token>/',password_reset_email,name='password_reset_email'),
     path('UserOrders/',UserOrders,name='UserOrders'),
     path('UserOrderDetails/<ordeid>/',UserOrderDetails,name='UserOrderDetails'),
+    path('change_password/',change_password,name='change_password'),
+
+    path('generate-invoice/<order_id>/',generate_invoice,name='generate_invoice'),
 ]
